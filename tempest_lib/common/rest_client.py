@@ -413,8 +413,9 @@ class RestClient(object):
         # NOTE(mtreinish): This is for compatibility with Glance and swift
         # APIs. These are the return content types that Glance api v1
         # (and occasionally swift) are using.
+        #application/octet-stream added. Bug = 1417458
         TXT_ENC = ['text/plain', 'text/html', 'text/html; charset=utf-8',
-                   'text/plain; charset=utf-8']
+                   'text/plain; charset=utf-8',"application/octet-stream"]
 
         if ctype.lower() in JSON_ENC:
             parse_resp = True
@@ -423,7 +424,7 @@ class RestClient(object):
         else:
             raise exceptions.InvalidContentType(str(resp.status))
 
-        if resp.status == 401 or resp.status == 403:
+        if resp.status == 401 or resp.status == 403 or resp.status == 405:
             raise exceptions.Unauthorized(resp_body)
 
         if resp.status == 404:
